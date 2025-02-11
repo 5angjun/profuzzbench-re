@@ -7,8 +7,8 @@ from pandas import Grouper
 from matplotlib import pyplot as plt
 import pandas as pd
 
-FUZZER_LIST = ['aflnet', 'aflnwe','stateafl']
-FUZZER_LABEL_NAME = ('AFLNet', 'AFLNwe','StateAFL')
+FUZZER_LIST = ['aflnet', 'aflnwe','stateafl','nsfuzz-v','nsfuzz']
+FUZZER_LABEL_NAME = ('AFLNet', 'AFLNwe','StateAFL','nsfuzz-v','nsfuzz')
 
 def main(csv_file, put, runs, cut_off, step, out_file):
   #Read the results

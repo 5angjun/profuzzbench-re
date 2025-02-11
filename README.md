@@ -42,6 +42,9 @@ cd $PFBENCH/results-lightftp
 profuzzbench_generate_csv.sh lightftp 1 aflnet results.csv 0
 profuzzbench_generate_csv.sh lightftp 1 aflnwe results.csv 1
 profuzzbench_generate_csv.sh lightftp 1 stateafl results.csv 1
+profuzzbench_generate_csv.sh lightftp 1 nsfuzz-v results.csv 1
+profuzzbench_generate_csv.sh lightftp 1 nsfuzz results.csv 1
+profuzzbench_generate_csv.sh lightftp 1 stateafl results.csv 1
 
 cd $PFBENCH/results-lightftp
 
