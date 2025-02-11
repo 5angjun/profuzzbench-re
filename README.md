@@ -55,3 +55,14 @@ profuzzbench_plot.py -i results.csv -p lightftp -r 1 -c 60 -s 1 -o cov_over_time
 ```
 profuzzbench_generate_all.sh
 ```
+
+# If you want to add your Fuzz to Benchmark
+```
+Edit scripts/execution/profuzzbench_build_all.sh -> Add your building scripts
+
+Edit scripts/execution/profuzzbench_exec_all.sh -> Add your running scripts
+
+Edit scripts/analysis/profuzzbench_plot.py -> FUZZER_LIST, FUZZER_LABEL_NAME
+
+Edit scripts/analysis/profuzzbench_generate_all -> FUZZERS
+````
