@@ -96,3 +96,5 @@ if __name__ == '__main__':
     parser.add_argument('-o','--out_file',type=str,required=True,help="Output file")
     args = parser.parse_args()
     main(args.csv_file, args.put, args.runs, args.cut_off, args.step, args.out_file)
+# -c -> The max time rates
+# -s -> The average time for adding the multiple coverage
