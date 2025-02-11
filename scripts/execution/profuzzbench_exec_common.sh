@@ -18,16 +18,7 @@ cids=()
 
 #create one container for each run
 for i in $(seq 1 $RUNS); do
-  if [[ $FUZZER == "stateafl" ]]; then
-    PRIVILEGED="--privileged --user root"
-    CORE_PATTERN="&& echo core | tee /proc/sys/kernel/core_pattern && echo 0 | tee /proc/sys/kernel/randomize_va_space"
-  else
-    PRIVILEGED="--privileged --user root"
-    CORE_PATTERN="&& echo core | tee /proc/sys/kernel/core_pattern"
-  fi
-
-  echo docker run --cpus=1 $PRIVILEGED -d -it $DOCIMAGE /bin/bash -c "unset AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES && cd ${WORKDIR} ${CORE_PATTERN} && run ${FUZZER} ${OUTDIR} '${OPTIONS}' ${TIMEOUT} ${SKIPCOUNT}"
-  id=$(docker run --cpus=1 $PRIVILEGED -d -it $DOCIMAGE /bin/bash -c "unset AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES && cd ${WORKDIR} ${CORE_PATTERN} && run ${FUZZER} ${OUTDIR} '${OPTIONS}' ${TIMEOUT} ${SKIPCOUNT}")
+  id=$(docker run --cpus=1 -d -it $DOCIMAGE /bin/bash -c "cd ${WORKDIR} && run ${FUZZER} ${OUTDIR} '${OPTIONS}' ${TIMEOUT} ${SKIPCOUNT}")
   cids+=(${id::12}) #store only the first 12 characters of a container ID
 done
 
