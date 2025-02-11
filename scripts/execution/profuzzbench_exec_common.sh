@@ -9,7 +9,6 @@ OUTDIR=$5     #name of the output folder created inside the docker container
 OPTIONS=$6    #all configured options for fuzzing
 TIMEOUT=$7    #time for fuzzing
 SKIPCOUNT=$8  #used for calculating coverage over time. e.g., SKIPCOUNT=5 means we run gcovr after every 5 test cases
-DELETE=$9
 
 WORKDIR="/home/ubuntu/experiments"
 
@@ -18,7 +17,7 @@ cids=()
 
 #create one container for each run
 for i in $(seq 1 $RUNS); do
-  id=$(docker run --cpus=1 -d -it $DOCIMAGE /bin/bash -c "cd ${WORKDIR} && run ${FUZZER} ${OUTDIR} '${OPTIONS}' ${TIMEOUT} ${SKIPCOUNT}")
+  id=$(docker run --cpus=1 -v /proc:/host/proc:ro --privileged -d -it $DOCIMAGE /bin/bash -c "cd ${WORKDIR} && run ${FUZZER} ${OUTDIR} '${OPTIONS}' ${TIMEOUT} ${SKIPCOUNT}")
   cids+=(${id::12}) #store only the first 12 characters of a container ID
 done
 
@@ -35,15 +34,22 @@ wait
 
 #collect the fuzzing results from the containers
 printf "\n${FUZZER^^}: Collecting results and save them to ${SAVETO}"
+mkdir -p ${SAVETO}
 index=1
 for id in ${cids[@]}; do
   printf "\n${FUZZER^^}: Collecting results from container ${id}"
   docker cp ${id}:/home/ubuntu/experiments/${OUTDIR}.tar.gz ${SAVETO}/${OUTDIR}_${index}.tar.gz > /dev/null
-  if [ ! -z $DELETE ]; then
-    printf "\nDeleting ${id}"
-    docker rm ${id} # Remove container now that we don't need it
-  fi
   index=$((index+1))
 done
+
+
+## For NSFuzz
+# printf "\n${FUZZER^^}: Collecting ranges of state variables and save them to ${SAVETO}"
+# index=1
+# for id in ${cids[@]}; do
+#   printf "\n${FUZZER^^}: Collecting ranges of state variables from container ${id}"
+#   docker cp ${id}:/tmp/sv_range.json ${SAVETO}/${OUTDIR}_sv_range_${index}.json > /dev/null
+#   index=$((index+1))
+# done
 
 printf "\n${FUZZER^^}: I am done!\n"
